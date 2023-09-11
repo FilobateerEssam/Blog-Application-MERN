@@ -2,9 +2,12 @@ const asyncHandler = require('express-async-handler');
 const {User, validateUpdateUser } = require("../Models/User"); 
 const bcrypt = require('bcryptjs');
 const path = require('path');
-const { cloudinaryUploadImage, cloudinaryRemoveImage } = require('../utils/cloudinary');
+const { cloudinaryUploadImage, cloudinaryRemoveImage , cloudinaryRemoveMultipleImage } = require('../utils/cloudinary');
 const { use } = require('../routes/usersRoute');
 const fs = require('fs');
+
+const { Post } = require('../Models/Post')
+const { Comment } = require('../Models/Comments')
 
 /**----------------------------------------
  * @desc   Get All Users Profile
@@ -191,18 +194,31 @@ module.exports.deleteUserProfi1eCtrl = asyncHandler(async (req,res) => {
     if(!user) {
         return res.status(404).json({message: "User Not Found"});
     }
-    // @TODO 2. get All posts from db
+    // @2. get All posts from db
 
-    // @TODO 3. get the pulic ids from the posts 
+    const posts = await Post.find({user: user._id});
 
-    // @TODO 4. delete all posts Images  from cloudinary that belong to this user
+    //  3. get the pulic ids from the posts 
+
+    // ? is used to check if posts is not null or undefined
+    
+    const publicIds = posts?.map((post) => post.image.publicId);
+
+    // 4. delete all posts Images  from cloudinary that belong to this user
+
+    if (publicIds?.length > 0) {
+        await cloudinaryRemoveMultipleImage(publicIds);
+    }
 
     // 5. delete the profile picture from cloudinary that belong to this user
 
     await cloudinaryRemoveImage(user.profilePhoto.publicid);
 
 
-    // @TODO 6. delete  user Posts and Comments 
+    // 6. delete  user Posts and Comments 
+
+    await Post.deleteMany({user: user._id});
+    await Comment.deleteMany({user: user._id});
 
     // 7. delete the user himself
 

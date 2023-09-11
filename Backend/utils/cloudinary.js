@@ -25,7 +25,7 @@ const cloudinaryUploadImage = async (fileToUpload) => {
 
 
 
-// cloudinary Remove image from cloudinary website
+// cloudinary Remove single image from cloudinary website
 
 const cloudinaryRemoveImage = async (imagePublicId) => {
     try {
@@ -40,4 +40,20 @@ const cloudinaryRemoveImage = async (imagePublicId) => {
     }
 };
 
-module.exports = { cloudinaryUploadImage, cloudinaryRemoveImage };
+// cloudinary Remove Multiple images from cloudinary website
+
+const cloudinaryRemoveMultipleImage = async (publicIds) => {
+    try {
+
+        // delete image from cloudinary website
+        
+        const result = await cloudinary.v2.api.delete_resources(publicIds);
+        return result;
+
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
+module.exports = { cloudinaryUploadImage, cloudinaryRemoveImage , cloudinaryRemoveMultipleImage };
