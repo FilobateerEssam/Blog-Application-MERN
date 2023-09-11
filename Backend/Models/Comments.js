@@ -5,6 +5,7 @@ const joi = require('joi'); // for validation
 // Comment Schema
 
 const CommentSchema = new mongoose.Schema({
+    
     postId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post',

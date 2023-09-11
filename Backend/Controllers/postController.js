@@ -11,6 +11,9 @@ const {
   cloudinaryRemoveImage,
 } = require("../utils/cloudinary");
 
+const { Comment } = require("../Models/Comments");
+
+
 /**----------------------------------------
  * @desc   Create New Post
  * @route /api/posts
@@ -127,9 +130,11 @@ module.exports.getAllPostsCtrl = asyncHandler(async (req, res) => {
 /**---------------------------------------- */
 
 module.exports.getSinglePostCtrl = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id).populate("user", [
+  const post = await Post.findById(req.params.id)
+  .populate("user", [
     "-password",
-  ]); // include  all user data in post except password
+  ])
+  .populate("comments"); // include  all user data in post except password
 
   if (!post) {
     return res.status(404).json({ message: "Post Not Found" });
@@ -177,7 +182,12 @@ module.exports.deletePostCtrl = asyncHandler(async (req, res) => {
 
     await cloudinaryRemoveImage(post.image.publicId);
 
-    //@TODO 4. Delete All comments of this post
+    //4. Delete All comments of this post
+
+    // deleteMany() is a mongoose method works on array used to delete all comments of this post
+    
+    await Comment.deleteMany({ postId : post._id });
+    
 
     // 5. send the response to client
 
