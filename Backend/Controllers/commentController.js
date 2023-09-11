@@ -107,7 +107,7 @@ module.exports.updateCommentCtrl = asyncHandler(async (req, res) => {
     // Authorization
 
     if(req.user.id !== comment.user.toString()) {
-        req.status(403).json({message: 'You are not allowed to update this comment , only owner of the comment can update it'});
+        res.status(403).json({message: 'You are not allowed to update this comment , only owner of the comment can update it'});
     }
     
     // update comment
