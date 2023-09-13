@@ -7,12 +7,15 @@ import Register from "./Pages/Forms/Register"
 import AdminDashboard from "./Pages/Admin/AdminDashboard"
 import PostPage from "./Pages/Posts/PostPage"
 import CreatePost from "./Pages/Create_post/createpost"
+import Footer from "./components/footer/Footer";
 
 function App() {
   return (
     <BrowserRouter>
 
-      <Header /> {/* will be always visible */}
+
+    {/* will be always visible */}
+      <Header /> 
 
 
       {/* include routes here  will be visible based on the path Routes mean have many Route */}
@@ -29,6 +32,8 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
 
       </Routes>
+
+      <Footer />
 
     </BrowserRouter>
   );
